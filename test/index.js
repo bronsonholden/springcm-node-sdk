@@ -48,6 +48,35 @@ describe('SDK', function () {
 				done();
 			});
 		});
+
+		it('diagnoses Authenticate API errors', function (done) {
+			var client = new Client();
+			var err = client.diagnose({
+				'error': 'ErrorType',
+				'errorDescription': 'Error description'
+			});
+
+			expect(err).to.equal('Error description');
+
+			done();
+		});
+
+		it ('diagnoses Object API errors', function (done) {
+			var client = new Client();
+			var err = client.diagnose({
+				'Error': {
+					'HttpStatusCode': 0,
+					'UserMessage': 'User Error Message',
+					'DeveloperMessage': 'Developer Error Message',
+					'ErrorCode': 0,
+					'ReferenceId': '00000000-0000-0000-0000-000000000000'
+				}
+			});
+
+			expect(err).to.equal('0 Developer Error Message');
+
+			done();
+		});
 	});
 
 	describe('POST client ID and client secret', function () {
