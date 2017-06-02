@@ -31,5 +31,14 @@ describe('SDK', function () {
 				done();
 			});
 		});
+
+		it('defaults to .env defined credentials', function (done) {
+			authenticate((err, token) => {
+				expect(err).to.equal(null);
+				expect(token).to.be.a('string');
+
+				done();
+			});
+		});
 	});
 });
