@@ -13,6 +13,16 @@ module.exports = function () {
 				return body.toString().length;
 			}
 		});
+	nock('https://httpbin.org')
+		.get('/anything')
+		.query({
+			'field': 'value'
+		})
+		.reply(200, {
+			'args': {
+				'field': 'value'
+			}
+		});
 	nock(process.env.TEST_BAD_HTTP_REQUEST_HOSTNAME)
 		.get('/')
 		.replyWithError('Test HTTP error');

@@ -77,6 +77,26 @@ describe('SDK', function () {
 
 			done();
 		});
+
+		it('sends request parameters as a query string', function (done) {
+			var client = new Client();
+
+			client.request({
+				hostname: 'httpbin.org',
+				path: '/anything',
+				params: {
+					'field': 'value'
+				}
+			}, (err, data) => {
+				expect(err).to.equal(null);
+				expect(data).to.exist;
+				expect(data.args).to.exist;
+				expect(data.args.field).to.be.a('string');
+				expect(data.args.field).to.equal('value');
+
+				done();
+			});
+		});
 	});
 
 	describe('POST client ID and client secret', function () {
