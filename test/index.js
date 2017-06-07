@@ -5,6 +5,7 @@ const assert = require('chai').assert;
 const auth = require('../lib/auth');
 const diagnose = require('../lib/diagnose');
 const hostnames = require('../lib/hostnames');
+const folder = require('../lib/folder');
 
 dotenv.config();
 
@@ -101,5 +102,94 @@ describe('SDK', function () {
 
 			done();
 		});
+	});
+
+	describe('folder', function () {
+		// Ensure we have a token and base URL first
+		before(function (done) {
+			auth.uatna11((err, token) => {
+				done();
+			});
+		});
+
+		it('gets root folder', function (done) {
+			nock(auth.href())
+				.get('/folders')
+				.query({
+					'systemfolder': 'root'
+				})
+				.reply(200, {
+					'Name': 'Account Name',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The root folder of the account',
+					'BrowseDocumentsUrl': 'https://browse.documents.url',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url'
+					},
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url'
+					},
+					'CreateDocumentHref': 'https://upload.document.url',
+					'Href': 'https://current.folder.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			folder.root((err, obj) => {
+				expect(err).to.equal(null);
+				expect(obj).to.exist;
+				expect(obj.name).to.be.a('string');
+
+				done();
+			});
+
+		});
+
+		it('handles get root folder error', function (done) {
+			nock(auth.href())
+				.get('/folders')
+				.query({
+					'systemfolder': 'root'
+				})
+				.reply(404, {
+					'Error': {
+						'HttpStatusCode': 404,
+						'UserMessage': 'User error message',
+						'DeveloperMessage': 'Developer error message',
+						'ErrorCode': 1,
+						'ReferenceId': '00000000-0000-0000-0000-000000000000'
+					}
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			folder.root((err, obj) => {
+				expect(err).to.exist;
+				expect(err).to.be.a('string');
+				expect(obj).to.not.exist;
+
+				done();
+			});
+		})
 	});
 });
