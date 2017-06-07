@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const nock = require('nock');
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 const auth = require('../lib/auth');
@@ -40,6 +41,20 @@ describe('SDK', function () {
 
 	describe('auth', function () {
 		if (!process.env.NOCK_OFF) {
+			nock(hostnames.uatna11.auth)
+				.post('/apiuser')
+				.replyWithError('Error message');
+
+			it('detects request errors', function (done) {
+				auth.uatna11((err, token) => {
+					expect(token).to.not.exist;
+					expect(err).to.exist;
+					expect(err).to.be.a('string');
+
+					done();
+				});
+			});
+
 			beforeEach(function () {
 				require('./nock/authenticate.js')();
 			});
