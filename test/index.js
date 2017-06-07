@@ -1,12 +1,14 @@
 const dotenv = require('dotenv');
 const nock = require('nock');
-const expect = require('chai').expect;
-const assert = require('chai').assert;
+const chai = require('chai');
+const expect = chai.expect;
+const assert = chai.assert;
 const auth = require('../lib/auth');
 const diagnose = require('../lib/diagnose');
 const hostnames = require('../lib/hostnames');
 const folder = require('../lib/folder');
 
+chai.use(require('chai-datetime'));
 dotenv.config();
 
 describe('SDK', function () {
@@ -50,12 +52,15 @@ describe('SDK', function () {
 	});
 
 	describe('auth', function () {
+		// Forced error tests can't be performed without nocking an error response
 		if (!process.env.NOCK_OFF) {
-			nock(hostnames.uatna11.auth)
-				.post('/apiuser')
-				.replyWithError('Error message');
-
 			it('detects request errors', function (done) {
+				nock(hostnames.uatna11.auth)
+					.post('/apiuser', {
+						'client_id': process.env.TEST_BAD_CLIENT_ID,
+						'client_secret': process.env.TEST_BAD_CLIENT_SECRET
+					}).replyWithError('Error message');
+
 				auth.uatna11((err, token) => {
 					expect(token).to.not.exist;
 					expect(err).to.exist;
@@ -65,8 +70,28 @@ describe('SDK', function () {
 				});
 			});
 
-			beforeEach(function () {
-				require('./nock/authenticate.js')();
+			it('detects authentication failure', function (done) {
+				nock(hostnames.uatna11.auth)
+					.post('/apiuser', {
+						'client_id': process.env.TEST_BAD_CLIENT_ID,
+						'client_secret': process.env.TEST_BAD_CLIENT_SECRET
+					}).reply(401, {
+						'error': 'invalid_client',
+						'errorDescription': 'Invalid Client Id or Client Secret'
+					}, {
+						'Content-Type': 'application/json',
+						'Content-Length': function (req, res, body) {
+							return body.toString().length;
+						}
+					});
+
+				auth.uatna11((err, token) => {
+					expect(token).to.not.exist;
+					expect(err).to.exist;
+					expect(err).to.be.a('string');
+
+					done();
+				});
 			});
 		}
 
@@ -80,6 +105,22 @@ describe('SDK', function () {
 		});
 
 		it('returns access token', function (done) {
+			nock(hostnames.uatna11.auth)
+				.post('/apiuser', {
+					'client_id': process.env.SPRINGCM_CLIENT_ID,
+					'client_secret': process.env.SPRINGCM_CLIENT_SECRET
+				}).reply(200, {
+					'access_token': process.env.TEST_ACCESS_TOKEN,
+					'token_type': 'bearer',
+					'expires_in': 3600,
+					'api_base_url': 'https://api.base.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
 			auth.uatna11(process.env.SPRINGCM_CLIENT_ID, process.env.SPRINGCM_CLIENT_SECRET, (err, token) => {
 				expect(err).to.equal(null);
 				expect(token).to.be.a('string');
@@ -89,6 +130,22 @@ describe('SDK', function () {
 		});
 
 		it('defaults to .env defined credentials', function (done) {
+			nock(hostnames.uatna11.auth)
+				.post('/apiuser', {
+					'client_id': process.env.SPRINGCM_CLIENT_ID,
+					'client_secret': process.env.SPRINGCM_CLIENT_SECRET
+				}).reply(200, {
+					'access_token': process.env.TEST_ACCESS_TOKEN,
+					'token_type': 'bearer',
+					'expires_in': 3600,
+					'api_base_url': 'https://api.base.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
 			auth.uatna11((err, token) => {
 				expect(err).to.equal(null);
 				expect(token).to.be.a('string');
@@ -96,26 +153,27 @@ describe('SDK', function () {
 				done();
 			});
 		});
-
-		it('stores access token and calculates expiration date', function (done) {
-			auth.uatna11((err, token) => {
-				var expires = auth.expires();
-
-				expect(expires).to.exist;
-				expect(expires).to.be.an('object');
-				expect(expires).to.afterDate('date');
-				expect(auth.token()).to.equal(token);
-				expect(auth.type()).to.equal('bearer');
-				expect(auth.href()).to.be.a('string');
-			});
-
-			done();
-		});
 	});
 
 	describe('folder', function () {
 		// Ensure we have a token and base URL first
-		before(function (done) {
+		beforeEach(function (done) {
+			nock(hostnames.uatna11.auth)
+				.post('/apiuser', {
+					'client_id': process.env.SPRINGCM_CLIENT_ID,
+					'client_secret': process.env.SPRINGCM_CLIENT_SECRET
+				}).reply(200, {
+					'access_token': process.env.TEST_ACCESS_TOKEN,
+					'token_type': 'bearer',
+					'expires_in': 3600,
+					'api_base_url': 'https://api.base.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
 			auth.uatna11((err, token) => {
 				done();
 			});
@@ -171,34 +229,36 @@ describe('SDK', function () {
 
 		});
 
-		it('handles get root folder error', function (done) {
-			nock(auth.href())
-				.get('/folders')
-				.query({
-					'systemfolder': 'root'
-				})
-				.reply(404, {
-					'Error': {
-						'HttpStatusCode': 404,
-						'UserMessage': 'User error message',
-						'DeveloperMessage': 'Developer error message',
-						'ErrorCode': 1,
-						'ReferenceId': '00000000-0000-0000-0000-000000000000'
-					}
-				}, {
-					'Content-Type': 'application/json',
-					'Content-Length': function (req, res, body) {
-						return body.toString().length;
-					}
+		if (!process.env.NOCK_OFF) {
+			it('handles get root folder error', function (done) {
+				nock(auth.href())
+					.get('/folders')
+					.query({
+						'systemfolder': 'root'
+					})
+					.reply(404, {
+						'Error': {
+							'HttpStatusCode': 404,
+							'UserMessage': 'User error message',
+							'DeveloperMessage': 'Developer error message',
+							'ErrorCode': 1,
+							'ReferenceId': '00000000-0000-0000-0000-000000000000'
+						}
+					}, {
+						'Content-Type': 'application/json',
+						'Content-Length': function (req, res, body) {
+							return body.toString().length;
+						}
+					});
+
+				folder.root((err, obj) => {
+					expect(err).to.exist;
+					expect(err).to.be.a('string');
+					expect(obj).to.not.exist;
+
+					done();
 				});
-
-			folder.root((err, obj) => {
-				expect(err).to.exist;
-				expect(err).to.be.a('string');
-				expect(obj).to.not.exist;
-
-				done();
 			});
-		})
+		}
 	});
 });
