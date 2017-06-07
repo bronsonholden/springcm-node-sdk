@@ -15,7 +15,6 @@ Note: All of the following variables are *required*.
 
 | Variable | Description |
 |----------|-------------|
-| SPRINGCM_ENVIRONMENT | The SpringCM environment to access. Must be `UAT` or `Production`. |
 | SPRINGCM_DATACENTER | The SpringCM data center to access. Typically this is `NA11`. |
 | SPRINGCM_CLIENT_ID | The SpringCM client ID (provided by support staff) for your API user. |
 | SPRINGCM_CLIENT_SECRET | The SpringCM client secret (provided by support staff) for your API user. |

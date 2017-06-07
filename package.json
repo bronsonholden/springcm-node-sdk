@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "chai": "^4.0.1",
+    "chai-datetime": "^1.4.1",
     "coveralls": "^2.13.1",
     "mocha": "^3.4.2",
     "nock": "^9.0.13",

@@ -3,7 +3,7 @@ const hostnames = require('../../lib/hostnames');
 
 module.exports = function () {
 	// Authentication
-	nock(hostnames.auth)
+	nock(hostnames.uatna11.auth)
 		.post('/apiuser', {
 			'client_id': process.env.SPRINGCM_CLIENT_ID,
 			'client_secret': process.env.SPRINGCM_CLIENT_SECRET
@@ -19,7 +19,7 @@ module.exports = function () {
 			}
 		});
 	// Invalid authentication
-	nock(hostnames.auth)
+	nock(hostnames.uatna11.auth)
 		.post('/apiuser', {
 			'client_id': process.env.TEST_BAD_CLIENT_ID,
 			'client_secret': process.env.TEST_BAD_CLIENT_SECRET
