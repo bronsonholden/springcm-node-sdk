@@ -49,6 +49,7 @@ describe('SDK', function () {
 			expect(auth.token()).to.equal(null);
 			expect(auth.expires()).to.equal(null);
 			expect(auth.type()).to.equal(null);
+			expect(auth.href()).to.equal(null);
 
 			done();
 		});
@@ -80,6 +81,7 @@ describe('SDK', function () {
 				expect(expires).to.afterDate('date');
 				expect(auth.token()).to.equal(token);
 				expect(auth.type()).to.equal('bearer');
+				expect(auth.href()).to.be.a('string');
 			});
 
 			done();
