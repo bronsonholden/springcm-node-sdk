@@ -12,7 +12,7 @@ dotenv.config();
 describe('SDK', function () {
 	describe('diagnose() SpringCM responses', function () {
 		it('detects authentication errors', function (done) {
-			const err = diagnose({
+			const err = diagnose(null, {
 				'error': 100,
 				'errorDescription': 'An authentication error'
 			});
@@ -25,7 +25,7 @@ describe('SDK', function () {
 		});
 
 		it('detects object API errors', function (done) {
-			const err = diagnose({
+			const err = diagnose(null, {
 				'Error': {
 					'ErrorCode': 100,
 					'DeveloperMessage': 'An object API error'
@@ -35,6 +35,15 @@ describe('SDK', function () {
 			expect(err).to.exist;
 			expect(err).to.be.a('string');
 			expect(err).to.equal(`100 An object API error`);
+
+			done();
+		});
+
+		it('detects request errors', function (done) {
+			const err = diagnose(new Error('Error message'));
+
+			expect(err).to.exist;
+			expect(err).to.be.a('string');
 
 			done();
 		});
