@@ -157,7 +157,7 @@ describe('SDK', function () {
 
 	describe('folder', function () {
 		// Ensure we have a token and base URL first
-		beforeEach(function (done) {
+		before(function (done) {
 			nock(hostnames.uatna11.auth)
 				.post('/apiuser', {
 					'client_id': process.env.SPRINGCM_CLIENT_ID,
