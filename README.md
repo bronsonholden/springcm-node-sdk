@@ -5,7 +5,7 @@ SpringCM Node.js REST API SDK
 
 This SDK currently provides a limited feature set, as it was created and is developed primarily for internal IT work at Stria.
 
-To use this SDK, you must create a `.env` file in the root of your project taht defines some environment variables used to access SpringCM. Alternatively, you can simply define these when running your application, like so:
+To use this SDK, you must create a `.env` file in the root of your project that defines some environment variables used to access SpringCM. Alternatively, you can simply define these when running your application, like so:
 
 ```
 SPRINGCM_CLIENT_ID=abcdefg-hijklm npm start
