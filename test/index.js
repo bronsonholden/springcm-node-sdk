@@ -96,10 +96,10 @@ describe('SDK', function () {
 		}
 
 		it('defaults access token, token type, and expiration to null', function (done) {
-			expect(auth.token()).to.equal(null);
-			expect(auth.expires()).to.equal(null);
-			expect(auth.type()).to.equal(null);
-			expect(auth.href()).to.equal(null);
+			expect(auth.token).to.equal(null);
+			expect(auth.expires).to.equal(null);
+			expect(auth.type).to.equal(null);
+			expect(auth.href).to.equal(null);
 
 			done();
 		});
@@ -180,7 +180,7 @@ describe('SDK', function () {
 		});
 
 		it('gets root folder', function (done) {
-			nock(auth.href())
+			nock(auth.href)
 				.get('/folders')
 				.query({
 					'systemfolder': 'root'
@@ -231,7 +231,7 @@ describe('SDK', function () {
 
 		if (!process.env.NOCK_OFF) {
 			it('handles get root folder error', function (done) {
-				nock(auth.href())
+				nock(auth.href)
 					.get('/folders')
 					.query({
 						'systemfolder': 'root'
