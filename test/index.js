@@ -52,6 +52,8 @@ describe('SDK', function () {
 	});
 
 	describe('auth', function () {
+		this.timeout(10000);
+
 		// Forced error tests can't be performed without nocking an error response
 		if (!process.env.NOCK_OFF) {
 			it('detects request errors', function (done) {
