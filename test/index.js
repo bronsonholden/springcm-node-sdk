@@ -7,6 +7,7 @@ const auth = require('../lib/auth');
 const diagnose = require('../lib/diagnose');
 const hostnames = require('../lib/hostnames');
 const folder = require('../lib/folder');
+const document = require('../lib/document');
 
 chai.use(require('chai-datetime'));
 dotenv.config();
@@ -233,6 +234,100 @@ describe('SDK', function () {
 
 		});
 
+		it('get subfolder', function (done) {
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'systemfolder': 'root'
+				})
+				.reply(200, {
+					'Name': 'Account Name',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The root folder of the account',
+					'BrowseDocumentsUrl': 'https://browse.documents.url',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url'
+					},
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url'
+					},
+					'CreateDocumentHref': 'https://upload.document.url',
+					'Href': 'https://current.folder.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'expand': 'path',
+					'path': '/Account Name/Trash'
+				})
+				.reply(200, {
+					'Name': 'Trash',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The trash folder',
+					'BrowseDocumentsUrl': 'https://browse.documents.url/1234',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url/1234'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url/1234'
+					},
+					'Path': '/Account Name/Trash',
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url/1234'
+					},
+					'CreateDocumentHref': 'https://upload.document.url/1234',
+					'Href': 'https://current.folder.url/1234'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			folder.root((err, root) => {
+				expect(err).to.not.exist;
+				expect(root).to.exist;
+
+				folder.subfolder(root, 'Trash', (err, fld) => {
+					expect(err).to.not.exist;
+					expect(fld).to.exist;
+
+					done();
+				});
+			});
+		});
+
 		if (process.env.NOCK_OFF) {
 			it('upload document', function (done) {
 				folder.root((err, fld) => {
@@ -279,5 +374,47 @@ describe('SDK', function () {
 				});
 			});
 		}
+	});
+
+	describe('document', function () {
+		it('get by path', function (done) {
+			nock(auth.href)
+				.get('/documents')
+				.query({
+					path: '/Test/Test.pdf'
+				})
+				.reply(200, {
+					'Name': 'Test.pdf',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': '',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Path': '/Test/Test.pdf',
+					'Href': 'https://test.document.url/test-1234',
+					'ParentFolder': {
+						'Href': 'https://test.document.folder.url'
+					}
+				});
+
+			document.get('/Test/Test.pdf', (err, doc) => {
+				expect(err).to.not.exist;
+				expect(doc).to.exist;
+
+				document.addAttributes(doc, null, (err, doc) => {
+					expect(err).to.not.exist;
+
+					done();
+				});
+			});
+		});
 	});
 });
