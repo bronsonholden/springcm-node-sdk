@@ -12,6 +12,8 @@ chai.use(require('chai-datetime'));
 dotenv.config();
 
 describe('SDK', function () {
+	this.timeout(10000);
+
 	describe('diagnose() SpringCM responses', function () {
 		it('detects authentication errors', function (done) {
 			const err = diagnose(null, {
@@ -230,6 +232,21 @@ describe('SDK', function () {
 			});
 
 		});
+
+		if (process.env.NOCK_OFF) {
+			it('upload document', function (done) {
+				folder.root((err, fld) => {
+					expect(err).to.not.exist;
+					expect(fld).to.exist;
+
+					folder.upload(fld, __dirname + '/Test.pdf', null, (err) => {
+						expect(err).to.not.exist;
+
+						done();
+					});
+				});
+			});
+		}
 
 		if (!process.env.NOCK_OFF) {
 			it('handles get root folder error', function (done) {
