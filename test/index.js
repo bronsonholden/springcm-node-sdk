@@ -378,6 +378,16 @@ describe('SDK', function () {
 
 	describe('document', function () {
 		it('get by path', function (done) {
+			var attr = {
+				'Contracts': {
+					'Status': {
+						'AttributeType': 'DropDown',
+						'RepeatingAttribute': false,
+						'Value': 'Active'
+					}
+				}
+			};
+
 			nock(auth.href)
 				.get('/documents')
 				.query({
@@ -405,11 +415,18 @@ describe('SDK', function () {
 					}
 				});
 
+			nock('https://test.document.url')
+				.patch('/test-1234', {
+					'attributegroups': attr
+				})
+				.reply(200, {
+				});
+
 			document.get('/Test/Test.pdf', (err, doc) => {
 				expect(err).to.not.exist;
 				expect(doc).to.exist;
 
-				document.addAttributes(doc, null, (err, doc) => {
+				document.addAttributes(doc, attr, (err, doc) => {
 					expect(err).to.not.exist;
 
 					done();
