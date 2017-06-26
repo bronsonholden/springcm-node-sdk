@@ -426,7 +426,7 @@ describe('SDK', function () {
 				expect(err).to.not.exist;
 				expect(doc).to.exist;
 
-				document.addAttributes(doc, attr, (err, doc) => {
+				document.attributes.add(doc, attr, (err, doc) => {
 					expect(err).to.not.exist;
 
 					done();
