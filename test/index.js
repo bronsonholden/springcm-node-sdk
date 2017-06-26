@@ -377,17 +377,18 @@ describe('SDK', function () {
 	});
 
 	describe('document', function () {
-		it('get by path', function (done) {
-			var attr = {
-				'Contracts': {
-					'Status': {
-						'AttributeType': 'DropDown',
-						'RepeatingAttribute': false,
-						'Value': 'Active'
-					}
+		var doc = null;
+		var attr = {
+			'Contracts': {
+				'Status': {
+					'AttributeType': 'DropDown',
+					'RepeatingAttribute': false,
+					'Value': 'Active'
 				}
-			};
+			}
+		};
 
+		beforeEach(function (done) {
 			nock(auth.href)
 				.get('/documents')
 				.query({
@@ -415,6 +416,21 @@ describe('SDK', function () {
 					}
 				});
 
+			document.get('/Test/Test.pdf', (err, res) => {
+				expect(err).to.not.exist;
+				expect(res).to.exist;
+
+				doc = res;
+
+				done();
+			});
+		});
+
+		it('get by path', function (done) {
+			done();
+		});
+
+		it('add attributes', function (done) {
 			nock('https://test.document.url')
 				.patch('/test-1234', {
 					'attributegroups': attr
@@ -422,15 +438,25 @@ describe('SDK', function () {
 				.reply(200, {
 				});
 
-			document.get('/Test/Test.pdf', (err, doc) => {
+			document.attributes.add(doc, attr, (err, res) => {
 				expect(err).to.not.exist;
-				expect(doc).to.exist;
 
-				document.attributes.add(doc, attr, (err, doc) => {
-					expect(err).to.not.exist;
+				done();
+			});
+		});
 
-					done();
+		it('set attributes', function (done) {
+			nock('https://test.document.url')
+				.put('/test-1234', {
+					'attributegroups': attr
+				})
+				.reply(200, {
 				});
+
+			document.attributes.set(doc, attr, (err, res) => {
+				expect(err).to.not.exist;
+
+				done();
 			});
 		});
 	});
