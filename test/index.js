@@ -7,11 +7,14 @@ const auth = require('../lib/auth');
 const diagnose = require('../lib/diagnose');
 const hostnames = require('../lib/hostnames');
 const folder = require('../lib/folder');
+const document = require('../lib/document');
 
 chai.use(require('chai-datetime'));
 dotenv.config();
 
 describe('SDK', function () {
+	this.timeout(10000);
+
 	describe('diagnose() SpringCM responses', function () {
 		it('detects authentication errors', function (done) {
 			const err = diagnose(null, {
@@ -52,6 +55,8 @@ describe('SDK', function () {
 	});
 
 	describe('auth', function () {
+		this.timeout(10000);
+
 		// Forced error tests can't be performed without nocking an error response
 		if (!process.env.NOCK_OFF) {
 			it('detects request errors', function (done) {
@@ -229,6 +234,115 @@ describe('SDK', function () {
 
 		});
 
+		it('get subfolder', function (done) {
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'systemfolder': 'root'
+				})
+				.reply(200, {
+					'Name': 'Account Name',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The root folder of the account',
+					'BrowseDocumentsUrl': 'https://browse.documents.url',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url'
+					},
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url'
+					},
+					'CreateDocumentHref': 'https://upload.document.url',
+					'Href': 'https://current.folder.url'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'expand': 'path',
+					'path': '/Account Name/Trash'
+				})
+				.reply(200, {
+					'Name': 'Trash',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The trash folder',
+					'BrowseDocumentsUrl': 'https://browse.documents.url/1234',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url/1234'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url/1234'
+					},
+					'Path': '/Account Name/Trash',
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url/1234'
+					},
+					'CreateDocumentHref': 'https://upload.document.url/1234',
+					'Href': 'https://current.folder.url/1234'
+				}, {
+					'Content-Type': 'application/json',
+					'Content-Length': function (req, res, body) {
+						return body.toString().length;
+					}
+				});
+
+			folder.root((err, root) => {
+				expect(err).to.not.exist;
+				expect(root).to.exist;
+
+				folder.subfolder(root, 'Trash', (err, fld) => {
+					expect(err).to.not.exist;
+					expect(fld).to.exist;
+
+					done();
+				});
+			});
+		});
+
+		if (process.env.NOCK_OFF) {
+			it('upload document', function (done) {
+				folder.root((err, fld) => {
+					expect(err).to.not.exist;
+					expect(fld).to.exist;
+
+					folder.upload(fld, __dirname + '/Test.pdf', null, (err) => {
+						expect(err).to.not.exist;
+
+						done();
+					});
+				});
+			});
+		}
+
 		if (!process.env.NOCK_OFF) {
 			it('handles get root folder error', function (done) {
 				nock(auth.href)
@@ -260,5 +374,90 @@ describe('SDK', function () {
 				});
 			});
 		}
+	});
+
+	describe('document', function () {
+		var doc = null;
+		var attr = {
+			'Contracts': {
+				'Status': {
+					'AttributeType': 'DropDown',
+					'RepeatingAttribute': false,
+					'Value': 'Active'
+				}
+			}
+		};
+
+		beforeEach(function (done) {
+			nock(auth.href)
+				.get('/documents')
+				.query({
+					path: '/Test/Test.pdf'
+				})
+				.reply(200, {
+					'Name': 'Test.pdf',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': '',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Path': '/Test/Test.pdf',
+					'Href': 'https://test.document.url/test-1234',
+					'ParentFolder': {
+						'Href': 'https://test.document.folder.url'
+					}
+				});
+
+			document.get('/Test/Test.pdf', (err, res) => {
+				expect(err).to.not.exist;
+				expect(res).to.exist;
+
+				doc = res;
+
+				done();
+			});
+		});
+
+		it('get by path', function (done) {
+			done();
+		});
+
+		it('add attributes', function (done) {
+			nock('https://test.document.url')
+				.patch('/test-1234', {
+					'attributegroups': attr
+				})
+				.reply(200, {
+				});
+
+			document.attributes.add(doc, attr, (err, res) => {
+				expect(err).to.not.exist;
+
+				done();
+			});
+		});
+
+		it('set attributes', function (done) {
+			nock('https://test.document.url')
+				.put('/test-1234', {
+					'attributegroups': attr
+				})
+				.reply(200, {
+				});
+
+			document.attributes.set(doc, attr, (err, res) => {
+				expect(err).to.not.exist;
+
+				done();
+			});
+		});
 	});
 });
