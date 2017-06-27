@@ -8,6 +8,7 @@ const diagnose = require('../lib/diagnose');
 const hostnames = require('../lib/hostnames');
 const folder = require('../lib/folder');
 const document = require('../lib/document');
+const SpringCM = require('..');
 
 chai.use(require('chai-datetime'));
 dotenv.config();
