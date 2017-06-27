@@ -328,6 +328,103 @@ describe('SDK', function () {
 			});
 		});
 
+		it('create folder', function (done) {
+			var rootFolder = {
+				'Name': 'Account Name',
+				'CreatedDate': '2000-01-01T00:00:00.000Z',
+				'CreatedBy': 'user@email.com',
+				'UpdatedDate': '2000-01-01T00:00:00.000Z',
+				'UpdatedBy': 'user@email.com',
+				'Description': 'The root folder of the account',
+				'BrowseDocumentsUrl': 'https://browse.documents.url',
+				'AccessLevel': {
+					'See': true,
+					'Read': true,
+					'Write': true,
+					'Move': true,
+					'Create': true,
+					'SetAccess': true
+				},
+				'Documents': {
+					'Href': 'https://folder.documents.url'
+				},
+				'Folders': {
+					'Href': 'https://folder.folders.url'
+				},
+				'ShareLinks': {
+					'Href': 'https://folder.sharelinks.url'
+				},
+				'CreateDocumentHref': 'https://upload.document.url',
+				'Href': 'https://current.folder.url'
+			};
+
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'systemfolder': 'root'
+				})
+				.reply(200, rootFolder);
+
+			// create() internally requests body of parent by path
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					// Optional slash at end of path
+					// Minor TODO: requests should clip trailing slashes, as it's only
+					// used to more easily concatenate paths and folder/doc names
+					'path': /\/Account Name\/?/,
+					'expand': 'path'
+				})
+				.reply(200, rootFolder);
+
+			nock(auth.href)
+				.post('/folders', {
+					'name': 'TestFolder',
+					'parentfolder': rootFolder
+				})
+				.reply(200, {
+					'Name': 'TestFolder',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'A created test folder',
+					'Path': '/Account Name/TestFolder',
+					'BrowseDocumentsUrl': 'https://browse.documents.url',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url'
+					},
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url'
+					},
+					'CreateDocumentHref': 'https://upload.document.url',
+					'Href': 'https://current.folder.url'
+				});
+
+			folder.root((err, root) => {
+				expect(err).to.not.exist;
+				expect(root).to.exist;
+
+				folder.create(root, 'TestFolder', (err, fld) => {
+					expect(err).to.not.exist;
+					expect(fld).to.exist;
+
+					done();
+				});
+			});
+		});
+
 		if (process.env.NOCK_OFF) {
 			it('upload document', function (done) {
 				folder.root((err, fld) => {
@@ -374,6 +471,51 @@ describe('SDK', function () {
 				});
 			});
 		}
+
+		it('get folder by path', function (done) {
+			nock(auth.href)
+				.get('/folders')
+				.query({
+					'path': '/Trash',
+					'expand': 'path'
+				})
+				.reply(200, {
+					'Name': 'Trash',
+					'CreatedDate': '2000-01-01T00:00:00.000Z',
+					'CreatedBy': 'user@email.com',
+					'UpdatedDate': '2000-01-01T00:00:00.000Z',
+					'UpdatedBy': 'user@email.com',
+					'Description': 'The trash folder',
+					'BrowseDocumentsUrl': 'https://browse.documents.url/1234',
+					'AccessLevel': {
+						'See': true,
+						'Read': true,
+						'Write': true,
+						'Move': true,
+						'Create': true,
+						'SetAccess': true
+					},
+					'Documents': {
+						'Href': 'https://folder.documents.url/1234'
+					},
+					'Folders': {
+						'Href': 'https://folder.folders.url/1234'
+					},
+					'Path': '/Account Name/Trash',
+					'ShareLinks': {
+						'Href': 'https://folder.sharelinks.url/1234'
+					},
+					'CreateDocumentHref': 'https://upload.document.url/1234',
+					'Href': 'https://current.folder.url/1234'
+				});
+
+			folder.path('/Trash', (err, fld) => {
+				expect(err).to.not.exist;
+				expect(fld).to.exist;
+
+				done();
+			});
+		});
 	});
 
 	describe('document', function () {
