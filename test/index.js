@@ -559,7 +559,7 @@ describe('SDK', function () {
 					}
 				});
 
-			document.get('/Test/Test.pdf', (err, res) => {
+			document.path('/Test/Test.pdf', (err, res) => {
 				expect(err).to.not.exist;
 				expect(res).to.exist;
 
