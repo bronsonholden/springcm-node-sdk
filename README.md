@@ -5,20 +5,27 @@ SpringCM Node.js REST API SDK
 
 This SDK currently provides a limited feature set, as it was created and is developed primarily for internal IT work at Stria.
 
-To use this SDK, you must create a `.env` file in the root of your project that defines some environment variables used to access SpringCM. Alternatively, you can simply define these when running your application, like so:
-
-```
-SPRINGCM_CLIENT_ID=abcdefg-hijklm npm start
-```
-
-Note: All of the following variables are *required*.
-
-| Variable | Description |
-|----------|-------------|
-| SPRINGCM_DATACENTER | The SpringCM data center to access. Typically this is `NA11`. |
-| SPRINGCM_CLIENT_ID | The SpringCM client ID (provided by support staff) for your API user. |
-| SPRINGCM_CLIENT_SECRET | The SpringCM client secret (provided by support staff) for your API user. |
-
-Should you opt to use a `.env` file, please do **not** share or publish it in **any way**. This file obviously contains sensitive information regarding your SpringCM account, and should be manually created and never stored in source control or similar shared media. Create it to provide your application access to SpringCM, and destroy it when it is no longer needed.
-
 Accessing the REST API requires you create an API user in your SpringCM account and assign a client ID to that user in the REST API section of Account Preferences. Once set, you can use the API by providing the client ID and corresponding secret. The client ID and client secret are provided by SpringCM's support staff on request. For more information, visit [this webpage](https://developer.springcm.com/guides/rest-api-authentication).
+
+MIT License
+===========
+
+Copyright (c) 2017 Stria, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
