@@ -24,17 +24,7 @@ async.waterfall([
 		});
 	},
 	(doc, callback) => {
-		SpringCM.document.checkout(doc, (err, href) => {
-			if (err) {
-				return callback(err);
-			}
-
-			callback(null, href);
-		});
-	},
-	(href, callback) => {
-		console.log(href);
-		SpringCM.document.checkin(href, fs.createReadStream('./test.txt'), (err) => {
+		SpringCM.document.version(doc, fs.createReadStream('./test.txt'), (err) => {
 			if (err) {
 				return callback(err);
 			}
