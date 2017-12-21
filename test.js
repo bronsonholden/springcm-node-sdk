@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const fs = require('fs');
 const async = require('async');
 const SpringCM = require('./index');

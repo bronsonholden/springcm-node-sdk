@@ -1,4 +1,3 @@
-const dotenv = require('dotenv');
 const nock = require('nock');
 const chai = require('chai');
 const expect = chai.expect;
@@ -11,7 +10,6 @@ const document = require('../lib/document');
 const SpringCM = require('..');
 
 chai.use(require('chai-datetime'));
-dotenv.config();
 
 describe('SDK', function () {
 	this.timeout(10000);

@@ -1,7 +1,3 @@
-require('dotenv').config({
-	path: '../.env'
-});
-
 const fs = require('fs');
 const SpringCM = require('../index');
 
