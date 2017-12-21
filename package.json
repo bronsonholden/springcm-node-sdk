@@ -1,5 +1,5 @@
 {
-  "name": "springcm-nodejs-sdk",
+  "name": "springcm-node-sdk",
   "version": "0.1.6",
   "description": "SpringCM REST API SDK for Node.js applications",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/stria/springcm-nodejs-sdk.git"
+    "url": "git+ssh://git@bitbucket.org/stria/springcm-node-sdk.git"
   },
   "keywords": [
     "springcm",
@@ -23,7 +23,7 @@
   ],
   "author": "Paul Holden",
   "license": "UNLICENSED",
-  "homepage": "https://bitbucket.org/stria/springcm-nodejs-sdk#readme",
+  "homepage": "https://bitbucket.org/stria/springcm-node-sdk#readme",
   "dependencies": {
     "async": "^2.5.0",
     "deasync": "^0.1.10",
