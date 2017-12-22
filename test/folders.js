@@ -16,7 +16,7 @@ SpringCM.auth.login(process.env.SPRINGCM_DATACENTER, process.env.SPRINGCM_CLIENT
 				return console.log(err);
 			}
 
-			console.log(documents);
+			console.log(documents.map(d => d.path));
 		});
 	});
 });
