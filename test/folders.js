@@ -11,10 +11,12 @@ SpringCM.auth.login(process.env.SPRINGCM_DATACENTER, process.env.SPRINGCM_CLIENT
 			return console.log(err);
 		}
 
-		SpringCM.folder.folders(folder, (err, folders) => {
+		SpringCM.folder.documents(folder, (err, documents) => {
 			if (err) {
 				return console.log(err);
 			}
+
+			console.log(documents);
 		});
 	});
 });
