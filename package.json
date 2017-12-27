@@ -26,7 +26,6 @@
   "homepage": "https://bitbucket.org/stria/springcm-node-sdk#readme",
   "dependencies": {
     "async": "^2.5.0",
-    "deasync": "^0.1.10",
     "moment": "^2.18.1",
     "request": "^2.81.0"
   },
