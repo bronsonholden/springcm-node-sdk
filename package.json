@@ -1,6 +1,6 @@
 {
   "name": "springcm-node-sdk",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "SpringCM REST API SDK for Node.js applications",
   "main": "index.js",
   "scripts": {
