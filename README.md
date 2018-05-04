@@ -64,7 +64,7 @@ springCm.getRootFolder((err, root) => {
 
 ```js
 springCm.getRootFolder((err, root) => {
-  springCm.getSubfolders((err, folders) => {
+  springCm.getSubfolders(root, (err, folders) => {
     // folders is an array of all folders under the top level /
     // e.g. Trash and Other Sources
   });
