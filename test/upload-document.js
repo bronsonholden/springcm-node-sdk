@@ -22,7 +22,7 @@ describe('get-folder', function () {
   });
 
   it('upload test PDF (default name)', function (done) {
-    springCm.getFolder('/SFTP Uploads', (err, folder) => {
+    springCm.getFolder('/Trash', (err, folder) => {
       expect(err).to.not.exist;
       expect(folder).to.exist;
       springCm.uploadDocument(folder, fs.createReadStream('./test/Test.pdf'), (err) => {
@@ -33,7 +33,7 @@ describe('get-folder', function () {
   });
 
   it('upload test PDF (specify name)', function (done) {
-    springCm.getFolder('/SFTP Uploads', (err, folder) => {
+    springCm.getFolder('/Trash', (err, folder) => {
       expect(err).to.not.exist;
       expect(folder).to.exist;
       springCm.uploadDocument(folder, fs.createReadStream('./test/Test.pdf'), {
