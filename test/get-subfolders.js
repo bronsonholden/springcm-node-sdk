@@ -25,8 +25,29 @@ describe('get-subfolders', function () {
     springCm.close(done);
   });
 
-  it('get subfolders', function (done) {
+  it('get all subfolders', function (done) {
     springCm.getSubfolders(root, (err, folders) => {
+      expect(err).to.not.exist;
+      expect(folders).to.be.an('array');
+      done();
+    });
+  });
+
+  it('get paged subfolders', function (done) {
+    springCm.getSubfolders(root, {
+      offset: 0,
+      limit: 3
+    }, (err, folders) => {
+      expect(err).to.not.exist;
+      expect(folders).to.be.an('array');
+      done();
+    });
+  });
+
+  it('get subfolders (explicit limit)', function (done) {
+    springCm.getSubfolders(root, {
+      limit: 3
+    }, (err, folders) => {
       expect(err).to.not.exist;
       expect(folders).to.be.an('array');
       done();
