@@ -1,5 +1,5 @@
 const fs = require('fs');
-//const { describe, it, before, after } = require('mocha');
+const { describe, it, before, after } = require('mocha');
 const { expect } = require('chai');
 const SpringCM = require('../');
 const env = require('./env');
