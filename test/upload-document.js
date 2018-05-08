@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const SpringCM = require('../');
 const env = require('./env');
 
-describe('get-folder', function () {
+describe('upload-document', function () {
   var springCm;
 
   this.timeout(10000);
