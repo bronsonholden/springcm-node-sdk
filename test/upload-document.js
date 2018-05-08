@@ -147,19 +147,6 @@ describe('upload-document', function () {
         });
       });
     });
-
-    it('application/octet-stream', function (done) {
-      springCm.getFolder('/Trash', (err, folder) => {
-        expect(err).to.not.exist;
-        expect(folder).to.exist;
-        springCm.uploadDocument(folder, fs.createReadStream('./test/Test.txt'), {
-          name: 'Test.txt'
-        }, (err) => {
-          expect(err).to.not.exist;
-          done();
-        });
-      });
-    });
   });
 
   describe('TIFF', function () {
