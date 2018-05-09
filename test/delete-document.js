@@ -26,6 +26,36 @@ describe('delete-document', function () {
     springCm.close(done);
   });
 
+  describe('reject invalid documents', function () {
+    it('null', function (done) {
+      springCm.deleteDocument(null, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('number', function (done) {
+      springCm.deleteDocument(12345, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('boolean', function (done) {
+      springCm.deleteDocument(true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('function', function (done) {
+      springCm.deleteDocument(() => true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+  });
+
   it('delete document by path', function (done) {
     springCm.uploadDocument(root, fs.createReadStream('./test/Test.pdf'), {
       name: 'Test Delete 1.pdf',

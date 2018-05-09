@@ -94,6 +94,45 @@ describe('springcm-document', function () {
     });
   });
 
+  describe('document path', function () {
+    var doc;
+
+    before(function (done) {
+      springCm.getDocument('/Test.pdf', (err, d) => {
+        expect(err).to.not.exist;
+        expect(d).to.exist;
+        doc = d;
+        done();
+      });
+    });
+
+    it('has document path', function (done) {
+      expect(doc.getPath()).to.be.a('string');
+      expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+      done();
+    });
+  });
+
+  describe('document parent folder', function () {
+    var doc;
+
+    before(function (done) {
+      springCm.getDocument('/Test.pdf', (err, d) => {
+        expect(err).to.not.exist;
+        expect(d).to.exist;
+        doc = d;
+        done();
+      });
+    });
+
+    it('has parent folder', function (done) {
+      const folder = doc.getParentFolder();
+      expect(folder).to.be.an('object');
+      expect(folder.getPath()).to.equal('/Paul Holden UAT');
+      done();
+    });
+  });
+
   describe('document properties', function (done) {
     var doc;
 
