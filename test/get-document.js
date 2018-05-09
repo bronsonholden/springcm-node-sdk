@@ -20,6 +20,36 @@ describe('get-document', function () {
     springCm.close(done);
   });
 
+  describe('reject invalid documents', function () {
+    it('null', function (done) {
+      springCm.getDocument(null, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('number', function (done) {
+      springCm.getDocument(12345, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('boolean', function (done) {
+      springCm.getDocument(true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('function', function (done) {
+      springCm.getDocument(() => true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+  });
+
   it('get document by path', function (done) {
     springCm.getDocument('/Test.pdf', (err, doc) => {
       expect(err).to.not.exist;
