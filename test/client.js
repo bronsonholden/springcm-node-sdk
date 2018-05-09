@@ -49,4 +49,11 @@ describe('client', function () {
       done();
     });
   });
+
+  it('runs idle tasks', function (done) {
+    var springCm = new SpringCM(env);
+    springCm.queue.push({
+      idle: 1000
+    }, 0, done);
+  });
 });
