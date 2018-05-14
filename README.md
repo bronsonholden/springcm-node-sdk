@@ -10,6 +10,9 @@ Accessing the REST API requires you create an API user in your SpringCM account 
 
 # Examples
 
+Below are a few usage examples. Be sure to check the tests folder for more
+examples.
+
 ## SpringCM Client
 
 #### Connect
@@ -102,5 +105,52 @@ springCm.getSubfolders(parent, {
   limit: 20
 }, (err, folders) => {
   // folders is an array of the first (no more than) 20 subfolders
+});
+```
+
+## Documents
+
+#### Get document by path
+
+```js
+springCm.getDocument('/Contracts/ACME, Inc 01-01-2010.pdf', (err, doc) => {
+  // doc is an object representing the contract document
+});
+```
+
+#### Get document by UID
+
+```js
+springCm.getDocument('127bd4e1-368e-1878-9651-ed101cabfdff', (err, doc) => {
+  // doc is an object representing the referenced document
+});
+```
+
+#### Delete document
+
+```js
+springCm.deleteDocument('/Contracts/ACME, Inc - Old.pdf', (err) => {
+  // doc is now in the Trash folder
+});
+```
+
+#### Move document
+
+You can reference the source document and target folder by path, UID, or
+with an existing object of the corresponding type, e.g.
+
+```js
+springCm.moveDocument('/Contracts/ACME, Inc.pdf', '/New Contracts/ACME, Inc/', (err) => {
+  // ...
+});
+
+springCm.moveDocument('96803885-47f6-4361-9747-1d5962b3b7a4', '/Board Minutes', (err) => {
+  // ...
+});
+
+springCm.getDocument('96803885-47f6-4361-9747-1d5962b3b7a4', (err, doc) => {
+  springCm.moveDocument(doc, '/Trash', (err) => {
+    // ...
+  });
 });
 ```
