@@ -27,7 +27,6 @@
   "homepage": "https://github.com/paulholden2/springcm-node-sdk#readme",
   "dependencies": {
     "async": "^2.5.0",
-    "is-uuid": "^1.0.2",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.14",
     "request": "^2.81.0"
