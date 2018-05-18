@@ -20,6 +20,36 @@ describe('get-folder', function () {
     springCm.close(done);
   });
 
+  describe('reject invalid folders', function () {
+    it('null', function (done) {
+      springCm.getFolder(null, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('number', function (done) {
+      springCm.getFolder(12345, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('boolean', function (done) {
+      springCm.getFolder(true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('function', function (done) {
+      springCm.getFolder(() => true, (err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+  });
+
   it('get folder by path', function (done) {
     springCm.getFolder('/', (err, folder) => {
       expect(err).to.not.exist;
