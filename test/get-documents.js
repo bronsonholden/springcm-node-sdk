@@ -39,6 +39,8 @@ describe('get-documents', function () {
 
     it('by reference', function (done) {
       springCm.getRootFolder((err, root) => {
+        expect(err).to.not.exist;
+        expect(root).to.exist;
         springCm.getDocuments(root, (err, documents) => {
           expect(err).to.not.exist;
           expect(documents).to.be.an('array');
