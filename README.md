@@ -154,3 +154,13 @@ springCm.getDocument('96803885-47f6-4361-9747-1d5962b3b7a4', (err, doc) => {
   });
 });
 ```
+
+#### Query CSV data
+
+```js
+springCm.csvLookup('/Admin/Customer Data.csv', {
+  'Customer Name': 'ACME, Inc.'
+}, (err, rows) => {
+  // ...
+});
+```
