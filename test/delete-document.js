@@ -7,7 +7,7 @@ const env = require('./env');
 describe('delete-document', function () {
   var springCm, root;
 
-  this.timeout(10000);
+  this.timeout(20000);
 
   before(function (done) {
     springCm = new SpringCM(env);
