@@ -126,6 +126,22 @@ springCm.getDocument('127bd4e1-368e-1878-9651-ed101cabfdff', (err, doc) => {
 });
 ```
 
+#### Download document
+
+```js
+springCm.downloadDocument('127bd4e1-368e-1878-9651-ed101cabfdff', fs.createWriteStream('./Downloaded.pdf'), (err) => {
+  // You can also download by path
+});
+
+// or
+
+springCm.getDocument('/Contracts/ACME, Inc - Signed.pdf', (err, doc) => {
+  springCm.downloadDocument(doc, fs.createWriteStream('./Signed.pdf'), (err) => {
+    // ...
+  });
+});
+```
+
 #### Delete document
 
 ```js
