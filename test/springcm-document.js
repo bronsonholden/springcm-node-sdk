@@ -95,21 +95,65 @@ describe('springcm-document', function () {
   });
 
   describe('document path', function () {
-    var doc;
+    describe('by path', function () {
+      var doc;
 
-    before(function (done) {
-      springCm.getDocument('/Test.pdf', (err, d) => {
-        expect(err).to.not.exist;
-        expect(d).to.exist;
-        doc = d;
+      before(function (done) {
+        springCm.getDocument('/Test.pdf', (err, d) => {
+          expect(err).to.not.exist;
+          expect(d).to.exist;
+          doc = d;
+          done();
+        });
+      });
+
+      it('has document path', function (done) {
+        expect(doc.getPath()).to.be.a('string');
+        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
         done();
       });
     });
 
-    it('has document path', function (done) {
-      expect(doc.getPath()).to.be.a('string');
-      expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
-      done();
+    describe('by UID', function () {
+      var doc;
+
+      before(function (done) {
+        springCm.getDocument('0063805f-9b42-e811-9c12-3ca82a1e3f41', (err, d) => {
+          expect(err).to.not.exist;
+          expect(d).to.exist;
+          doc = d;
+          done();
+        });
+      });
+
+      it('has document path', function (done) {
+        expect(doc.getPath()).to.be.a('string');
+        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+        done();
+      });
+    });
+
+    describe('by ref', function () {
+      var doc;
+
+      before(function (done) {
+        springCm.getDocument('/Test.pdf', (err, d1) => {
+          expect(err).to.not.exist;
+          expect(d1).to.exist;
+          springCm.getDocument(d1, (err, d2) => {
+            expect(err).to.not.exist;
+            expect(d2).to.exist;
+            doc = d2;
+            done();
+          });
+        });
+      });
+
+      it('has document path', function (done) {
+        expect(doc.getPath()).to.be.a('string');
+        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+        done();
+      });
     });
   });
 
