@@ -70,7 +70,6 @@ describe('get-folder', function () {
     springCm.getFolder('/', (err, f1) => {
       expect(err).to.not.exist;
       expect(f1).to.exist;
-
       springCm.getFolder(f1, (err, f2) => {
         expect(err).to.not.exist;
         expect(f2).to.exist;

@@ -109,7 +109,7 @@ describe('springcm-document', function () {
 
       it('has document path', function (done) {
         expect(doc.getPath()).to.be.a('string');
-        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+        expect(doc.getPath()).to.equal('/Test.pdf');
         done();
       });
     });
@@ -128,7 +128,7 @@ describe('springcm-document', function () {
 
       it('has document path', function (done) {
         expect(doc.getPath()).to.be.a('string');
-        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+        expect(doc.getPath()).to.equal('/Test.pdf');
         done();
       });
     });
@@ -151,7 +151,7 @@ describe('springcm-document', function () {
 
       it('has document path', function (done) {
         expect(doc.getPath()).to.be.a('string');
-        expect(doc.getPath()).to.equal('/Paul Holden UAT/Test.pdf');
+        expect(doc.getPath()).to.equal('/Test.pdf');
         done();
       });
     });
@@ -172,7 +172,7 @@ describe('springcm-document', function () {
     it('has parent folder', function (done) {
       const folder = doc.getParentFolder();
       expect(folder).to.be.an('object');
-      expect(folder.getPath()).to.equal('/Paul Holden UAT');
+      expect(folder.getPath()).to.equal('/');
       done();
     });
   });

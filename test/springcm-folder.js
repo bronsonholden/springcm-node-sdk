@@ -25,6 +25,25 @@ describe('springcm-folder', function () {
     springCm.close(done);
   });
 
+  describe('folder path', function () {
+    var root;
+
+    before(function (done) {
+      springCm.getFolder('/', (err, folder) => {
+        expect(err).to.not.exist;
+        expect(folder).to.exist;
+        root = folder;
+        done();
+      });
+    });
+
+    it('has folder path', function (done) {
+      expect(root.getPath()).to.exist;
+      expect(root.getPath()).to.equal('/');
+      done();
+    });
+  });
+
   describe('folder access', function () {
     var root;
 
