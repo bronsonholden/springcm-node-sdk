@@ -1,7 +1,5 @@
-const { describe, it, before, after } = require('mocha');
+const { describe, it } = require('mocha');
 const { expect } = require('chai');
-const SpringCM = require('../');
-const env = require('./env');
 const sanitizePath = require('../lib/sanitize-path');
 
 describe('sanitize-path', function () {
