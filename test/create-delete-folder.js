@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const SpringCM = require('../');
 const env = require('./env');
 
-describe('get-folder', function () {
+describe('create-folder & delete-folder', function () {
   var springCm;
 
   this.timeout(15000);
@@ -126,6 +126,63 @@ describe('get-folder', function () {
         springCm.getFolder('/Top Level 7/Mid Level', (err, folder) => {
           expect(err).to.exist;
           expect(folder).to.not.exist;
+          done();
+        });
+      });
+    });
+  });
+
+  it('create top-level folder (non-exclusive)', function (done) {
+    springCm.createFolder('/Top Level 8', (err, folder) => {
+      expect(err).to.not.exist;
+      expect(folder).to.exist;
+      expect(folder.getPath()).to.equal('/Top Level 8');
+      springCm.createFolder('/Top Level 8', {
+        exclusive: false
+      }, (err, folder) => {
+        expect(err).to.not.exist;
+        expect(folder).to.exist;
+        expect(folder.getPath()).to.equal('/Top Level 8');
+        springCm.deleteFolder('/Top Level 8', (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+  });
+
+  it('create mid-level folder (all non-exclusive)', function (done) {
+    springCm.createFolder('/Top Level 9/Mid Level', (err, top) => {
+      expect(err).to.not.exist;
+      expect(top).to.exist;
+      expect(top.getPath()).to.equal('/Top Level 9/Mid Level');
+      springCm.createFolder('/Top Level 9/Mid Level', {
+        exclusive: false
+      }, (err, mid) => {
+        expect(err).to.not.exist;
+        expect(mid).to.exist;
+        expect(mid.getPath()).to.equal('/Top Level 9/Mid Level');
+        springCm.deleteFolder('/Top Level 9', (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+  });
+
+  it('create mid-level folder (parent non-exclusive)', function (done) {
+    springCm.createFolder('/Top Level 10', (err, top) => {
+      expect(err).to.not.exist;
+      expect(top).to.exist;
+      expect(top.getPath()).to.equal('/Top Level 10');
+      springCm.createFolder('/Top Level 10/Mid Level', {
+        exclusive: false
+      }, (err, mid) => {
+        expect(err).to.not.exist;
+        expect(mid).to.exist;
+        expect(mid.getPath()).to.equal('/Top Level 10/Mid Level');
+        springCm.deleteFolder('/Top Level 10', (err) => {
+          expect(err).to.not.exist;
           done();
         });
       });
