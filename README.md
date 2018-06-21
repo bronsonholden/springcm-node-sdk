@@ -108,6 +108,36 @@ springCm.getSubfolders(parent, {
 });
 ```
 
+#### Create a folder
+
+You can create a new folder, or retrieve an existing folder by setting the
+`exclusive` option. By default, all folder creation is exclusive, meaning
+the operation will fail if the folder already exists. Note that this only
+applies to the base folder, i.e. creating `/Contracts/ACME, Inc` with
+`exclusive` set to `true` will succeed even if `/Contracts` already exists.
+
+```js
+// Creates only if the folder doesn't exist by default
+springCm.createFolder('/Contracts/PseudoTech, LLC', (err, folder) => {
+  // ...
+});
+
+// Get the folder if it already exists
+springCm.createFolder('/Contracts/ACME, Inc', { exclusive: false }, (err, folder) => {
+  // ...
+});
+```
+
+#### Upload document to a folder
+
+```js
+springCm.getFolder('/Deliveries/Contracts', (err, folder) => {
+  springCm.uploadDocument(folder, fs.createReadStream('ACME, Inc 2018.pdf'), (err, doc) => {
+    // ...
+  });
+});
+```
+
 ## Documents
 
 #### Get document by path
