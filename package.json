@@ -6,7 +6,8 @@
   "scripts": {
     "test": "nyc mocha test/*.js",
     "lint": "eslint .",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "doc": "jsdoc lib -r -d ./docs"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.1.1",
     "nock": "^9.0.13",
     "nyc": "^12.0.2"
