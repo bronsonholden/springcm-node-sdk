@@ -27,11 +27,12 @@
   "license": "MIT",
   "homepage": "https://github.com/paulholden2/springcm-node-sdk#readme",
   "dependencies": {
+    "ajv": "^6.5.2",
     "async": "^2.5.0",
+    "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.14",
-    "request": "^2.81.0",
-    "ajv": "^6.5.2"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "chai": "^4.0.1",
