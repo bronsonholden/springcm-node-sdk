@@ -4,6 +4,14 @@ os:
   - osx
 node_js:
   - "10"
+jobs:
+  include:
+    - stage: Linux Node 10
+      os: linux
+      node_js: 10
+    - stage: OSX Node 10
+      os: osx
+      node_js: 10
 after_script:
   - npm run lint
   - npm run doc
