@@ -30,6 +30,7 @@
     "ajv": "^6.5.2",
     "async": "^2.5.0",
     "lodash": "^4.17.10",
+    "matcher": "^1.1.1",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.14",
     "request": "^2.81.0"
