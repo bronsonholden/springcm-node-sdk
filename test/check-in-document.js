@@ -22,7 +22,9 @@ describe('check-in-document', function () {
   });
 
   it('check in document by path', function (done) {
-    springCm.checkInDocument('/Test Check-in.pdf', fs.createReadStream('./test/Test.pdf'), (err, doc) => {
+    springCm.checkInDocument('/Test Check-in.pdf', fs.createReadStream('./test/Test.pdf'), {
+      filename: 'Test.pdf'
+    }, (err, doc) => {
       expect(err).to.not.exist;
       expect(doc).to.exist;
       done();
@@ -30,7 +32,9 @@ describe('check-in-document', function () {
   });
 
   it('check in document by UID', function (done) {
-    springCm.checkInDocument('0dab6601-3841-e911-9c1d-3ca82a1e3f41', fs.createReadStream('./test/Test.pdf'), (err, doc) => {
+    springCm.checkInDocument('0dab6601-3841-e911-9c1d-3ca82a1e3f41', fs.createReadStream('./test/Test.pdf'), {
+      filename: 'Test.pdf'
+    }, (err, doc) => {
       expect(err).to.not.exist;
       expect(doc).to.exist;
       done();
@@ -42,7 +46,9 @@ describe('check-in-document', function () {
       expect(err).to.not.exist;
       expect(d1).to.exist;
 
-      springCm.checkInDocument(d1, fs.createReadStream('./test/Test.pdf'), (err, d2) => {
+      springCm.checkInDocument(d1, fs.createReadStream('./test/Test.pdf'), {
+        filename: 'Test.pdf'
+      }, (err, d2) => {
         expect(err).to.not.exist;
         expect(d2).to.exist;
 
