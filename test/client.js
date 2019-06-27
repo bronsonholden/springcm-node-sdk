@@ -39,17 +39,6 @@ describe('client', function () {
     });
   });
 
-  it('handles invalid dataCenter', function (done) {
-    var springCm = new SpringCM(_.defaults({
-      dataCenter: 'invalid'
-    }, env));
-
-    springCm.connect((err) => {
-      expect(err).to.be.an('error');
-      done();
-    });
-  });
-
   it('runs idle tasks', function (done) {
     var springCm = new SpringCM(env);
     springCm.queue.push({
